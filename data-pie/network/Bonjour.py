@@ -36,5 +36,5 @@ def main():
     bonjour.close()
     
 if __name__ == '__main__':
-    pass
+    main()
 
