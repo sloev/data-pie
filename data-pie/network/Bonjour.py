@@ -10,10 +10,11 @@ import pybonjour
 
 class Bonjour():
     def __init__(self,name,regtype,port):
+        print()
         self.sdRef = pybonjour.DNSServiceRegister(name,
                                      regtype,
                                      port,
-                                     callBack = self.register_callback)
+                                     self.register_callback)
         ready = select.select([self.sdRef], [], [])
 
         if self.sdRef in ready[0]:
