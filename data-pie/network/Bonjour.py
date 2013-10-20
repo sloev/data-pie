@@ -31,7 +31,7 @@ class Bonjour():
         self.sdRef.close()
         
 def main():
-    bonjour=Bonjour("TestService", "_test._tcp", "1234") 
+    bonjour=Bonjour("TestService", "_test._tcp", 1234) 
     time.sleep(20)
     bonjour.close()
     
