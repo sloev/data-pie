@@ -25,8 +25,10 @@ class Bonjour():
             print '  name    =', name
             print '  regtype =', regtype
             print '  domain  =', domain
+            
     def close(self):
         self.sdRef.close()
+        
 def main():
     bonjour=Bonjour("lol","_osc","1234") 
     time.sleep(20)
