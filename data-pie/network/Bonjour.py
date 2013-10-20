@@ -4,6 +4,9 @@ Created on Oct 20, 2013
 @author: johannes
 '''
 
+'''
+remember to close the sdref after use!!!
+'''
 import time
 import select
 import sys
