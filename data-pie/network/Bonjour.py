@@ -10,7 +10,7 @@ import sys
 import pybonjour
 
 class Bonjour():
-    def __init__(self,name,regtype,port):
+    def __init__(self,name,port):
         def register_callback(sdRef, flags, errorCode, name, regtype, domain):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 print 'Registered service:'
@@ -18,8 +18,8 @@ class Bonjour():
                 print '  regtype =', regtype
                 print '  domain  =', domain
                 
-        self.sdRef = pybonjour.DNSServiceRegister(name = name,
-                                     regtype = regtype,
+        self.sdRef = pybonjour.DNSServiceRegister(name = "/data-pie"+name,
+                                     regtype = '_osc._udp',
                                      port = port,
                                      callBack = register_callback)
         ready = select.select([self.sdRef], [], [])
@@ -30,7 +30,7 @@ class Bonjour():
         self.sdRef.close()
    
 def main():
-    bonjour=Bonjour("TestService2", '_test2._tcp', 1235) 
+    bonjour=Bonjour("TestService2", 1235) 
     time.sleep(20)
     bonjour.close()
     
