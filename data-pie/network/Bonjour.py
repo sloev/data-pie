@@ -18,7 +18,7 @@ class Bonjour():
                 print '  regtype =', regtype
                 print '  domain  =', domain
                 
-        self.sdRef = pybonjour.DNSServiceRegister(name = "/data-pie"+name,
+        self.sdRef = pybonjour.DNSServiceRegister(name = "/data-pie/"+name,
                                      regtype = '_osc._udp',
                                      port = port,
                                      callBack = register_callback)
@@ -30,7 +30,7 @@ class Bonjour():
         self.sdRef.close()
    
 def main():
-    bonjour=Bonjour("TestService2", 1235) 
+    bonjour=Bonjour("lol", 1235) 
     time.sleep(20)
     bonjour.close()
     
