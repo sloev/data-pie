@@ -44,7 +44,7 @@ class Osc(threading.Thread):
                 print '  regtype =', regtype
                 print '  domain  =', domain
                 
-        self.sdRef = pybonjour.DNSServiceRegister(name = "/data-pie/"+self.serverName,
+        self.sdRef = pybonjour.DNSServiceRegister(name = "data-pie."+self.serverName,
                                      regtype = '_osc._udp',
                                      port = self.port,
                                      callBack = register_callback)
@@ -58,7 +58,7 @@ class Osc(threading.Thread):
             time.sleep(1)
             
         self.exitRoutine()
-        print "Exit success of " + self.name
+        print "Exit success of " + self.serverName
 
     def stop(self):
         self.exitFlag=1
