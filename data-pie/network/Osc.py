@@ -44,7 +44,7 @@ class Osc(threading.Thread):
                 print '  regtype =', regtype
                 print '  domain  =', domain
                 
-        self.sdRef = pybonjour.DNSServiceRegister(name = "data-pie."+self.serverName,
+        self.sdRef = pybonjour.DNSServiceRegister(name = "datapie."+self.serverName,
                                      regtype = '_osc._udp',
                                      port = self.port,
                                      callBack = register_callback)
