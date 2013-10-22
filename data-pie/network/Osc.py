@@ -3,7 +3,7 @@ Created on Oct 21, 2013
 
 @author: johannes
 '''
-import OSC
+from OSC import *
 import pybonjour
 import threading
 import time
