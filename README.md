@@ -38,7 +38,7 @@ cd into the python examples directory
 $ make 
 $ make install
 ```
-run python example with included pd patch
+run python example with included pd patch:
 ```
 $ python test.py
 ```
