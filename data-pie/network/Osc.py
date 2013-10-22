@@ -15,7 +15,7 @@ https://github.com/tehn/serialosc/blob/master/profiles/monomeseries.py
 '''
 class Osc(threading.Thread):
     def __init__(self,serverName):
-        print "ctrl-c quits"
+        print "\n| osc started\t|\n|ctrl-c quits ]\t|\n"
         self.serverName=serverName
         threading.Thread.__init__(self)
         self.exitFlag=0  
