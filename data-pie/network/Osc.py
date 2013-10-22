@@ -55,7 +55,7 @@ class Osc(threading.Thread):
         while not self.exitFlag:
             #client stuff / send over osc
             print("still running")
-            time.sleep(0.001)
+            time.sleep(1)
             
         self.exitRoutine()
         print "Exit success of " + self.name
@@ -65,7 +65,7 @@ class Osc(threading.Thread):
         print("stop received")
         
     def exitRoutine(self):
-        self.osc_client.close()
+        #self.osc_client.close()
         self.osc_server.close()
         self.osc_server_thread.join()
         print "%s: osc server closed" % self.serverName
