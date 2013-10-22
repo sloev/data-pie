@@ -8,8 +8,10 @@ a python launcher lets the user choose a patch htrough rotating a wheel.
 pots lets the user change variables in the pure data patch
 audio out / in lets the standalone box function as effect or source
 
-Libpd and python on Raspberry pi
+Dependencies
 --------------------------------
+
+##Libpd and python on Raspberry pi
 This tutorial assumes you are running raspbian on your pi
 and that you have your pi connected to the internets
 
@@ -42,3 +44,7 @@ run python example with included pd patch:
 ```
 $ python test.py
 ```
+
+##data-pie
+Depends on above aswell as following:
+pybonjour, pyosc
