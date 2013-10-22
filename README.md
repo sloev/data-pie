@@ -19,16 +19,16 @@ Libpd comes with included pure-data vanilla which it prefers.
 
 In your ssh session with your pi go to home directory.
 Clone the libpd git repo:
-$ git clone https://github.com/libpd/libpd
+'''$ git clone https://github.com/libpd/libpd'''
 cd into the directory of libpd
-$ make
+'''$ make'''
 wait for 5 to 10 minutes
 done
 
 Install python stuff to be able to run libpd python examples:
-$ sudo apt-get install python-dev python-pyaudio
+'''$ sudo apt-get install python-dev python-pyaudio'''
 cd into the python examples directory 
-$ make 
-$ make install
+'''$ make 
+$ make install'''
 run python example with included pd patch
-$ python test.py
+'''$ python test.py'''
