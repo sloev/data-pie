@@ -15,6 +15,7 @@ https://github.com/tehn/serialosc/blob/master/profiles/monomeseries.py
 '''
 class Osc(threading.Thread):
     def __init__(self,serverName):
+        print "ctrl-c quits"
         self.serverName=serverName
         threading.Thread.__init__(self)
         self.exitFlag=0  
@@ -98,6 +99,9 @@ class Osc(threading.Thread):
 if __name__ == '__main__':
     thread=Osc("lol")
     thread.start()
-    time.sleep(10)
-    thread.stop()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        thread.stop()
     
