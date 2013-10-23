@@ -56,7 +56,7 @@ class Osc(threading.Thread):
         while not self.exitFlag:
             #client stuff / send over osc
             print("still running")
-            time.sleep(1)
+            time.sleep()
             
         self.exitRoutine()
         print "Exit success of " + self.serverName
