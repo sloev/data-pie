@@ -71,12 +71,14 @@ try:
             ready = select.select([browse_sdRef], [], [])
             if browse_sdRef in ready[0]:
                 pybonjour.DNSServiceProcessResult(browse_sdRef)
-            rNum= OSC.OSCMessage()
-            rNum.setAddress("/print")
-            n = seed.randint(1, 1000) # get a random num every loop
-            rNum.append(n)
-            c.send(rNum)
-            time.sleep(5) # wait here some secs
+            ad=c.address()
+            if ad is not None:
+                rNum= OSC.OSCMessage()
+                rNum.setAddress("/print")
+                n = seed.randint(1, 1000) # get a random num every loop
+                rNum.append(n)
+                c.send(rNum)
+                time.sleep(5) # wait here some secs
 
     except KeyboardInterrupt:
         pass
