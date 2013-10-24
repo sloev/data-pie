@@ -81,9 +81,12 @@ class bonjourThread(threading.Thread):
     def run(self):
         while not self.finished.isSet():
             print("running")
-            ready = select.select([self.sdRef], [], [])
-            if self.sdRef in ready[0]:
-                pybonjour.DNSServiceProcessResult(self.sdRef)
+            try:
+                ready = select.select([self.sdRef], [], [])
+                if self.sdRef in ready[0]:
+                    pybonjour.DNSServiceProcessResult(self.sdRef)
+            except ValueError:
+                print("eerroorr")
         print("end")
 #         print "a"
 #         print "b"
