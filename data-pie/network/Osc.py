@@ -64,6 +64,7 @@ class OscServer():
 class bonjourThread(threading.Thread):
 
     def __init__(self,name,regType,port):
+        threading.Thread.__init__(self)
         def register_callback(self, sdRef, flags, errorCode, name, regType, domain):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 print 'Registered service:'
