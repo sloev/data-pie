@@ -50,7 +50,6 @@ class OscServer():
         self.oscThread.join() 
         print "Waiting for bonjour server-thread to finish"
         self.bonjourThread.stop()
-        self.bonjourThread.join(10)
         
     def printing_handler(self, addr, tags, stuff, source):
         print "---"
@@ -87,7 +86,7 @@ class bonjourThread(threading.Thread):
             except:
                 
                 print("error!!!")
-                self.sdRef.close()
+                self.join(0)
 
         print("end")
 #         print "a"
@@ -96,6 +95,7 @@ class bonjourThread(threading.Thread):
 
     def stop (self):
         self.finished.set()
+        self.sdRef.close()
 
         print("lol")
 
