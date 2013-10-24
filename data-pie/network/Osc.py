@@ -86,6 +86,7 @@ class bonjourThread(threading.Thread):
             except self.finished.isSet():
                 self.sdRef.close()
                 self.join()
+                break
 
     def stop (self):
         self.finished.set()
