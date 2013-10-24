@@ -78,6 +78,8 @@ class bonjourThread(threading.Thread):
                                                   port = port,
                                                   callBack = register_callback)        
     def run(self):
+        self.sdRef.close()
+
         while not self.finished.isSet():
             print("running")
             try:
@@ -85,7 +87,6 @@ class bonjourThread(threading.Thread):
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
             except ValueError as ex:
-                self.sdRef.close()
 
                 print("troll\n\n"+str(ex))
                 self.join()
