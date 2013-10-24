@@ -84,11 +84,11 @@ class bonjourThread(threading.Thread):
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
             except self.finished.isSet():
-                break
+                self.sdRef.close()
+                self.join()
+
     def stop (self):
         self.finished.set()
-        self.sdRef.close()
-        self.join()
 
         
 def main():
