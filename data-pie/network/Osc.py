@@ -78,7 +78,7 @@ class bonjourThread(threading.Thread):
                                                   port = port,
                                                   callBack = register_callback)        
     def run(self):
-        while True:
+        while not self.finished.isSet():
             try:
                 ready = select.select([self.sdRef], [], [])
                 if self.sdRef in ready[0]:
@@ -88,11 +88,11 @@ class bonjourThread(threading.Thread):
                 self.sdRef.close()
                 print "b"
                 break
-        self.join()
 
 
     def stop (self):
         self.finished.set()
+        self.join()
 
         
 def main():
