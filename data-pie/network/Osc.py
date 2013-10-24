@@ -85,7 +85,7 @@ class bonjourThread(threading.Thread):
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
             except Exception as ex:
-                print("troll\n\n"+ex)
+                print("troll\n\n"+str(ex))
         print("end")
 #         print "a"
 #         print "b"
