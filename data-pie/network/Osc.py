@@ -46,8 +46,6 @@ class OscServer():
         return oscServer.serve_forever
         
     def close(self):
-        print "\nClosing OSCServer."
-        self.oscThread.close()
         print "Waiting for osc server-thread to finish"
         self.oscThread.join() 
         print "Waiting for bonjour server-thread to finish"
