@@ -22,7 +22,7 @@ import threading
 class OscServer():
     def __init__(self,name,regtype,address):
         
-        oscThreadTarget=self.initOscServer()
+        oscThreadTarget=self.initOscServer(address)
         
         self.oscThread = threading.Thread( target =  oscThreadTarget)
         self.oscThread.start()
@@ -30,11 +30,11 @@ class OscServer():
         self.bonjourThread = bonjourThread(name,regtype,self.port)
         self.bonjourThread.start()
     
-    def initOscServer(self):
+    def initOscServer(self,address):
         while True:
             try:
                 self.port = 9000 + random.randint(0,999)
-                oscServer = OSC.OSCServer((self.address, self.port))
+                oscServer = OSC.OSCServer((address, self.port))
                 print "%s: got port %s" % (self.name, self.port)
                 break
             except IOError:
