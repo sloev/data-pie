@@ -20,8 +20,9 @@ import threading
 
 
 class OscServer():
-    def __init__(self,name,regtype,address):
+    def __init__(self,name,regType,address):
         self.name=name
+        self.regType=regType
         self.address=address
         oscThreadTarget=self.initOscServer()
         
