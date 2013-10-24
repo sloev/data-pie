@@ -36,16 +36,17 @@ class OscServer():
         while True:
             try:
                 self.port = 9000 + random.randint(0,999)
-                oscServer = OSC.OSCServer((self.address, self.port))
+                self.oscServer = OSC.OSCServer((self.address, self.port))
                 print "%s: got port %s" % (self.name, self.port)
                 break
             except IOError:
                 print "%s: didn't get port %s" % (self.name, self.port)
-        oscServer.addDefaultHandlers()
-        oscServer.addMsgHandler("/print", self.printing_handler) 
-        return oscServer.serve_forever
+        self.oscServer.addDefaultHandlers()
+        self.oscServer.addMsgHandler("/print", self.printing_handler) 
+        return self.oscServer.serve_forever
         
     def close(self):
+        self.oscServer.close()
         print "Waiting for osc server-thread to finish"
         self.oscThread.join() 
         print "Waiting for bonjour server-thread to finish"
