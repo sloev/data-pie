@@ -21,7 +21,6 @@ import threading
 
 class OscServer():
     def __init__(self,name,regtype,address):
-        address='0.0.0.0'
         
         oscThreadTarget=self.initOscServer()
         
@@ -87,7 +86,7 @@ class bonjourThread(threading.Thread):
 
         
 def main():
-    osc=OscServer("TestService", '_test._tcp','0.0.0.0')
+    osc=OscServer("TestService", '_test._tcp','127.0.0.1')
     try:
         while True:
             time.sleep(1)

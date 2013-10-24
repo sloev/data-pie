@@ -1,29 +1,18 @@
-'''
-Created on Oct 23, 2013
-
-@author: johannes
-'''
 import select
+import socket
 import sys
 import pybonjour
-import OSC
-import socket
-import time, random
 
 
-regtype  = '_osc._udp'
+regtype  = '_test._tcp'
 timeout  = 5
 queried  = []
 resolved = []
-c = OSC.OSCClient()
-ip=''
-port=0
 
 
 def query_record_callback(sdRef, flags, interfaceIndex, errorCode, fullname,
                           rrtype, rrclass, rdata, ttl):
     if errorCode == pybonjour.kDNSServiceErr_NoError:
-        ip=socket.inet_ntoa(rdata)
         print '  IP         =', socket.inet_ntoa(rdata)
         queried.append(True)
 
@@ -95,24 +84,11 @@ browse_sdRef = pybonjour.DNSServiceBrowse(regtype = regtype,
 
 try:
     try:
-        ready = select.select([browse_sdRef], [], [])
-        if browse_sdRef in ready[0]:
-            pybonjour.DNSServiceProcessResult(browse_sdRef)
-        seed = random.Random() # need to seed first 
-
         while True:
-            if(c.address() not in None):
-                rNum= OSC.OSCMessage()
-                rNum.setAddress("/print")
-                n = seed.randint(1, 1000) # get a random num every loop
-                rNum.append(n)
-                c.send(rNum)
-                time.sleep(5) # wait here some secs
-
-
-                print
+            ready = select.select([browse_sdRef], [], [])
+            if browse_sdRef in ready[0]:
+                pybonjour.DNSServiceProcessResult(browse_sdRef)
     except KeyboardInterrupt:
         pass
 finally:
     browse_sdRef.close()
-
