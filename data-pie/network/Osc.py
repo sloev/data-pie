@@ -87,15 +87,11 @@ class bonjourThread(threading.Thread):
             except Exception as ex:
                 print("troll\n\n"+str(ex))
         print("end")
-        self.join()
-
-#         print "a"
-#         print "b"
-#         self.join()
-
+        
     def stop (self):
         self.finished.set()
         self.sdRef.close()
+        self.join()
 
         print("lol")
 
