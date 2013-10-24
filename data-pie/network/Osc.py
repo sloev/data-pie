@@ -17,6 +17,7 @@ import sys
 import pybonjour
 import random
 import threading
+import exceptions.ValueError
 
 class OscServer():
     def __init__(self,name,regType,address):
@@ -83,10 +84,9 @@ class bonjourThread(threading.Thread):
                 ready = select.select([self.sdRef], [], [])
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
-            except Exception as ex:
-                template = "An exception of type {0} occured. Arguments:\n{1!r}"
-                message = template.format(type(ex).__name__, ex.args)
-                print message
+            except ValueError as e:
+
+                print ("error"+e)
 
         print("end")
 #         print "a"
