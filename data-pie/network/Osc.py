@@ -83,9 +83,10 @@ class bonjourThread(threading.Thread):
                 ready = select.select([self.sdRef], [], [])
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
-            except ValueError as e:
-                
-                print("error!!!\n"+e)
+            except Exception as ex:
+                template = "An exception of type {0} occured. Arguments:\n{1!r}"
+                message = template.format(type(ex).__name__, ex.args)
+                print message
 
         print("end")
 #         print "a"
