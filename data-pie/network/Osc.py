@@ -51,6 +51,7 @@ class OscServer():
         self.oscThread.join() 
         print "Waiting for bonjour server-thread to finish"
         self.bonjourThread.stop()
+        self.bonjourThread.join(10)
         
     def printing_handler(self, addr, tags, stuff, source):
         print "---"
@@ -80,17 +81,19 @@ class bonjourThread(threading.Thread):
     def run(self):
         while not self.finished.isSet():
             print("running")
-            ready = select.select([self.sdRef], [], [])
-            if self.sdRef in ready[0]:
-                pybonjour.DNSServiceProcessResult(self.sdRef)
+            if(not self.sdRef.isClosed()):
+                ready = select.select([self.sdRef], [], [])
+                if self.sdRef in ready[0]:
+                    pybonjour.DNSServiceProcessResult(self.sdRef)
         print("end")
 #         print "a"
-#         self.sdRef.close()
 #         print "b"
 #         self.join()
 
     def stop (self):
         self.finished.set()
+        self.sdRef.close()
+
         print("lol")
 
         
