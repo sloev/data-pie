@@ -51,7 +51,7 @@ class OscServer():
         print "Waiting for osc server-thread to finish"
         self.oscThread.join() 
         print "Waiting for bonjour server-thread to finish"
-        self.bonjourThread.join()
+        self.bonjourThread.stop()
         
     def printing_handler(self, addr, tags, stuff, source):
         print "---"
