@@ -67,7 +67,7 @@ class bonjourThread(threading.Thread):
         threading.Thread.__init__(self)
         self.finished = threading.Event()
 
-        def register_callback(self, sdRef, flags, errorCode, name, regType, domain):
+        def register_callback(sdRef, flags, errorCode, name, regType, domain):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 print 'Registered service:'
                 print '  name    =', name
