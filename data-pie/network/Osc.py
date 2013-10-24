@@ -83,10 +83,11 @@ class bonjourThread(threading.Thread):
             ready = select.select([self.sdRef], [], [])
             if self.sdRef in ready[0]:
                 pybonjour.DNSServiceProcessResult(self.sdRef)
-        print "a"
-        self.sdRef.close()
-        print "b"
-        self.join()
+        print("end")
+#         print "a"
+#         self.sdRef.close()
+#         print "b"
+#         self.join()
 
     def stop (self):
         self.finished.set()
