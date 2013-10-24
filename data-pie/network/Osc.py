@@ -85,6 +85,8 @@ class bonjourThread(threading.Thread):
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
             except ValueError as ex:
+                self.sdRef.close()
+
                 print("troll\n\n"+str(ex))
                 self.join()
 
@@ -95,7 +97,6 @@ class bonjourThread(threading.Thread):
 
     def stop (self):
         self.finished.set()
-        self.sdRef.close()
 
         print("lol")
 
