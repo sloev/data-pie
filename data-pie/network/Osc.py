@@ -17,7 +17,7 @@ import sys
 import pybonjour
 import random
 import threading
-from exceptions import *
+import exceptions
 
 class OscServer():
     def __init__(self,name,regType,address):
@@ -84,7 +84,7 @@ class bonjourThread(threading.Thread):
                 ready = select.select([self.sdRef], [], [])
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
-            except ValueError as e:
+            except exceptions.ValueError as e:
 
                 print ("error"+e)
 
