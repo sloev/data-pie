@@ -84,8 +84,8 @@ class bonjourThread(threading.Thread):
                 ready = select.select([self.sdRef], [], [])
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
-            finally:
-                print("troll")
+            except Exception as ex:
+                print("troll\n\n"+ex)
         print("end")
 #         print "a"
 #         print "b"
