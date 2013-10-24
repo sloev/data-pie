@@ -17,7 +17,7 @@ import sys
 import pybonjour
 import random
 import threading
-import exceptions.ValueError
+from exceptions import *
 
 class OscServer():
     def __init__(self,name,regType,address):
