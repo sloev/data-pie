@@ -65,6 +65,8 @@ class bonjourThread(threading.Thread):
 
     def __init__(self,name,regType,port):
         threading.Thread.__init__(self)
+        self.finished = threading.Event()
+
         def register_callback(self, sdRef, flags, errorCode, name, regType, domain):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 print 'Registered service:'
@@ -77,15 +79,15 @@ class bonjourThread(threading.Thread):
                                                   port = port,
                                                   callBack = register_callback)        
     def run(self):
-        while not self._stopevent.isSet():            
+        while not self.finished.isSet():
             ready = select.select([self.sdRef], [], [])
             if self.sdRef in ready[0]:
                 pybonjour.DNSServiceProcessResult(self.sdRef)
 
-    def join(self,timeout=None):
-        self._stopevent.set()
+    def stop (self):
+        self.finished.set()
         self.sdRef.close()
-        threading.Thread.join(self, timeout)
+        self.join()
 
         
 def main():
