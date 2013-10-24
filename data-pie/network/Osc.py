@@ -79,21 +79,17 @@ class bonjourThread(threading.Thread):
                                                   callBack = register_callback)        
     def run(self):
         while not self.finished.isSet():
-            print("running")
             try:
                 ready = select.select([self.sdRef], [], [])
                 if self.sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(self.sdRef)
             except Exception as ex:
                 print("Exception in bonjourThread:\n"+str(ex))
-        print("end")
         
     def stop (self):
         self.finished.set()
         self.sdRef.close()
         self.join()
-
-        print("lol")
 
         
 def main():
