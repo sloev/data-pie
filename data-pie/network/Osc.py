@@ -1,107 +1,99 @@
-'''
-Created on Oct 21, 2013
 
-@author: johannes
-'''
-from OSC import *
-import pybonjour
-import threading
-import time
-import random
+""" receiving OSC with pyOSC
+https://trac.v2.nl/wiki/pyOSC
+example by www.ixi-audio.net based on pyOSC documentation
+
+this is a very basic example, for detailed info on pyOSC functionality check the OSC.py file 
+or run pydoc pyOSC.py. you can also get the docs by opening a python shell and doing
+>>> import OSC
+>>> help(OSC)
+"""
+
+
+import OSC
+import time, threading
 import select
-'''
-heavily based on :
-https://github.com/tehn/serialosc/blob/master/profiles/monomeseries.py
-'''
-class Osc(threading.Thread):
-    def __init__(self,serverName):
-        print "\n| osc started\t|\n| ctrl-c quits\t|\n"
-        self.serverName=serverName
-        threading.Thread.__init__(self)
-        self.exitFlag=0  
-        self.osc_server_active = False      
-        
-    def run(self):
+import sys
+import pybonjour
+import random
+import threading
 
-        while not self.osc_server_active:
+
+class OscServer():
+    def __init__(self,name,regtype,address):
+        address='0.0.0.0'
+        
+        oscThreadTarget=self.initOscServer()
+        
+        self.oscThread = threading.Thread( target =  oscThreadTarget)
+        self.oscThread.start()
+        
+        self.bonjourThread = bonjourThread(name,regtype,self.port)
+        self.bonjourThread.start()
+    
+    def initOscServer(self):
+        while True:
             try:
                 self.port = 9000 + random.randint(0,999)
-                self.osc_server = OSCServer(('0.0.0.0', self.port))
-                self.osc_server_active = True
+                oscServer = OSC.OSCServer((self.address, self.port))
+                print "%s: got port %s" % (self.name, self.port)
+                break
             except IOError:
                 print "%s: didn't get port %s" % (self.name, self.port)
-                            
-        self.osc_server.addMsgHandler('default', self.osc_handler)
-        self.osc_server_thread = threading.Thread(\
-                                                  target=self.osc_server.serve_forever)
-        self.osc_server_thread.start()
-        print "%s: starting OSC server on port %s" % (self.name, self.port)
+        oscServer.addDefaultHandlers()
+        oscServer.addMsgHandler("/print", self.printing_handler) 
+        return oscServer.serve_forever
+        
+    def close(self):
+        print "\nClosing OSCServer."
+        self.oscThread.close()
+        print "Waiting for osc server-thread to finish"
+        self.oscThread.join() 
+        print "Waiting for bonjour server-thread to finish"
+        self.bonjourThread.join()
+        
+    def printing_handler(self, addr, tags, stuff, source):
+        print "---"
+        print "received new osc msg from %s" % OSC.getUrlStr(source)
+        print "with addr : %s" % addr
+        print "typetags %s" % tags
+        print "data %s" % stuff
+        print "---"
+    
+class bonjourThread(threading.Thread):
 
-
-        def register_callback(sdRef, flags, errorCode, name, regtype, domain):
+    def __init__(self,name,regType,port):
+        def register_callback(self, sdRef, flags, errorCode, name, regType, domain):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 print 'Registered service:'
                 print '  name    =', name
-                print '  regtype =', regtype
+                print '  regtype =', regType
                 print '  domain  =', domain
-                
-        self.sdRef = pybonjour.DNSServiceRegister(name = "datapie."+self.serverName,
-                                     regtype = '_osc._udp',
-                                     port = self.port,
-                                     callBack = register_callback)
-        ready = select.select([self.sdRef], [], [])
-        if self.sdRef in ready[0]:
-            pybonjour.DNSServiceProcessResult(self.sdRef)
-            
-        while not self.exitFlag:
-            #client stuff / send over osc
-            print("still running")
-            time.sleep(1)
-            
-        self.exitRoutine()
-        print "Exit success of " + self.serverName
-
-    def stop(self):
-        self.exitFlag=1
-        print("stop received")
-        
-    def exitRoutine(self):
-        #self.osc_client.close()
-        self.osc_server.close()
-        self.osc_server_thread.join()
-        print "%s: osc server closed" % self.serverName
-        self.sdRef.close()
     
-    def connectClient(self,dest):
-        try:
-            self.osc_client.connect(dest)
-            print("successfully connected to "+str(dest)+" as a client")
-        except OSCClientError:
-            #will this actually ever fail??
-            print "no destination port?"
-                   
+        self.sdRef = pybonjour.DNSServiceRegister(name = name,
+                                                  regtype = regType,
+                                                  port = port,
+                                                  callBack = register_callback)        
+    def run(self):
+        while not self._stopevent.isSet():            
+            ready = select.select([self.sdRef], [], [])
+            if self.sdRef in ready[0]:
+                pybonjour.DNSServiceProcessResult(self.sdRef)
 
-    def osc_handler(self, addr, tags, data, client_address):
-                """handler for OSCMessages
-                - addr (string): The OSC-address pattern of the received Message
-                 (the 'addr' string has already been matched against the handler's registerd OSC-address,
-                 but may contain '*'s & such)
-                - tags (string): The OSC-typetags of the received message's arguments. (without the preceding comma)
-                - data (list): The OSCMessage's arguments
-                 Note that len(tags) == len(data)
-                - client_address ((host, port) tuple): the host & port this message originated from.
-                
-                a Message-handler function may return None, but it could also return an OSCMessage (or OSCBundle),
-                which then gets sent back to the client.
-                """
-                print "%s: osc: %s %s %s" % (self.name, addr, tags, data)
+    def join(self,timeout=None):
+        self._stopevent.set()
+        self.sdRef.close()
+        threading.Thread.join(self, timeout)
 
-if __name__ == '__main__':
-    thread=Osc("lol")
-    thread.start()
+        
+def main():
+    osc=OscServer("TestService", '_test._tcp','0.0.0.0')
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        thread.stop()
+        osc.close()
+
     
+
+
