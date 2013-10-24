@@ -29,7 +29,7 @@ class OscServer():
         self.oscThread = threading.Thread( target =  oscThreadTarget)
         self.oscThread.start()
         
-        self.bonjourThread = bonjourThread(self.name,self.regtype,self.port)
+        self.bonjourThread = bonjourThread(self.name,self.regType,self.port)
         self.bonjourThread.start()
     
     def initOscServer(self):
