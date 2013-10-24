@@ -86,7 +86,6 @@ class bonjourThread(threading.Thread):
             except:
                 
                 print("error!!!")
-                self.join(0)
 
         print("end")
 #         print "a"
@@ -96,6 +95,7 @@ class bonjourThread(threading.Thread):
     def stop (self):
         self.finished.set()
         self.sdRef.close()
+        self.join()
 
         print("lol")
 
