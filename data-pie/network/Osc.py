@@ -1,23 +1,21 @@
+'''
+Created on Oct 27, 2013
 
-""" receiving OSC with pyOSC
-https://trac.v2.nl/wiki/pyOSC
-example by www.ixi-audio.net based on pyOSC documentation
+@author: SloevWarez
+'''
 
-this is a very basic example, for detailed info on pyOSC functionality check the OSC.py file 
-or run pydoc pyOSC.py. you can also get the docs by opening a python shell and doing
->>> import OSC
->>> help(OSC)
-"""
-
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' this class is used to receive osc messages as well as announce   '
+' this service through zeroconf/bonjour                            '
+' depends on the pyOsc and pyBnjour modules                        '
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+import time
+import threading
+import select
+import random
 
 import OSC
-import time, threading
-import select
-import sys
 import pybonjour
-import random
-import threading
-from exceptions import ValueError
 
 class OscServer():
     def __init__(self,name,regType,address):
