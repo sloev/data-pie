@@ -29,8 +29,7 @@ class OscServer():
         self.oscThread = threading.Thread( target =  oscThreadTarget)
         self.oscThread.start()
         
-        self.bonjourThread = bonjourThread(self.name,self.regType,self.port)
-        self.bonjourThread.start()
+        self.initBonjourServer()
     
     def initOscServer(self):
         while True:
@@ -44,13 +43,30 @@ class OscServer():
         self.oscServer.addDefaultHandlers()
         self.oscServer.addMsgHandler("/print", self.printing_handler) 
         return self.oscServer.serve_forever
-        
+    
+    def initBonjourServer(self):
+        def register_callback(sdRef, flags, errorCode, name, regType, domain):
+            if errorCode == pybonjour.kDNSServiceErr_NoError:
+                print 'Registered service:'
+                print '  name    =', name
+                print '  regtype =', regType
+                print '  domain  =', domain
+    
+        self.sdRef = pybonjour.DNSServiceRegister(name = self.name,
+                                                  regtype = self.regType,
+                                                  port = self.port,
+                                                  callBack = register_callback)    
+        ready = select.select([self.sdRef], [], [])
+        if self.sdRef in ready[0]:
+            print("first victim")
+            pybonjour.DNSServiceProcessResult(self.sdRef)
+
     def close(self):
         self.oscServer.close()
         print "Waiting for osc server-thread to finish"
         self.oscThread.join() 
         print "Waiting for bonjour server-thread to finish"
-        self.bonjourThread.stop()
+        self.sdRef.close()
         
     def printing_handler(self, addr, tags, stuff, source):
         print "---"
@@ -59,37 +75,6 @@ class OscServer():
         print "typetags %s" % tags
         print "data %s" % stuff
         print "---"
-    
-class bonjourThread(threading.Thread):
-
-    def __init__(self,name,regType,port):
-        threading.Thread.__init__(self)
-        self.finished = threading.Event()
-
-        def register_callback(sdRef, flags, errorCode, name, regType, domain):
-            if errorCode == pybonjour.kDNSServiceErr_NoError:
-                print 'Registered service:'
-                print '  name    =', name
-                print '  regtype =', regType
-                print '  domain  =', domain
-    
-        self.sdRef = pybonjour.DNSServiceRegister(name = name,
-                                                  regtype = regType,
-                                                  port = port,
-                                                  callBack = register_callback)        
-    def run(self):
-        while not self.finished.isSet():
-            try:
-                ready = select.select([self.sdRef], [], [])
-                if self.sdRef in ready[0]:
-                    pybonjour.DNSServiceProcessResult(self.sdRef)
-            except Exception as ex:
-                print("Exception in bonjourThread:\n"+str(ex))
-        
-    def stop (self):
-        self.finished.set()
-        self.sdRef.close()
-        self.join()
 
         
 def main():
