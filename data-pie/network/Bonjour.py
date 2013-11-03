@@ -195,7 +195,6 @@ class Bonjour():
         """
         browse_sdRef = pybonjour.DNSServiceBrowse(regtype=self.regtype,
                                                   callBack=self.browse_callback)
-        self.debug("Browser Service Started")
         try:
             try:
                 while self._isBrowserRunning:
@@ -232,6 +231,7 @@ class Bonjour():
         Callback used by the run_regsiter routine.
         """
         if errorCode == pybonjour.kDNSServiceErr_NoError:
+            print(name+"\t"+regtype+"\t"+domain)
             pass
 
     def query_record_callback(self, sdRef, flags, interfaceIndex, errorCode,
