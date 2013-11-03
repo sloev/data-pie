@@ -11,14 +11,14 @@ import os
 class PatchBay():
     def __init__(self):
         self.fileDirectory='.'
-        manager = PdManager(1, 2, 44100, 1)
+        manager = PdManager(0, 1, 44100, 1)
         self.initPatchList()
     
     def openPatch(self,patchNumber):
-        if (patchNumber > 0 and patchNumber < len(self.patchList)):
+        try:
             self.patch = libpd_open_patch(self.patchList[patchNumber], self.fileDirectory)
-            print "$0: ", patch
-        else:
+            print "$0: ", self.patch
+        except IOError:
             print ("error: patchnumber is not in list")
         
     def closePatch(self):
@@ -30,6 +30,10 @@ class PatchBay():
             if files.endswith(".pd"):
                 self.patchList=[self.patchList , files]
                 print("added "+files+" to list")
+                
+    def getPatchList(self):
+        s="/".join(self.patchList)
+        return s            
         
 def main():
     pass
