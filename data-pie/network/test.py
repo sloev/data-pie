@@ -417,6 +417,8 @@ def main(argv, stdout):
             help="Registration type of the service advertised on Bonjour")
     parser.add_option("--log", action="store", dest="logging",
             help="Set logging level", default="INFO")
+    parser.add_option("-mode", action="store", dest="mode",
+            help="mode r or b", default="r")
     (options, args) = parser.parse_args(argv)
 
     if logging:
@@ -434,7 +436,7 @@ def main(argv, stdout):
 
     osc_bonjour.setClientCallback(client_callback)
 
-    if(len(argv)>1):
+    if(options.mode=="r"):
         osc_bonjour.run_browser(False)
     else:
         osc_bonjour.run_register(False)
