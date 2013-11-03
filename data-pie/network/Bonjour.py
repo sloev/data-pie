@@ -417,4 +417,4 @@ def main(argv):
 
 if __name__ == "__main__":
 
-    main(sys.argv, sys.stdout)
+    main(sys.argv)
