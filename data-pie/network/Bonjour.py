@@ -384,6 +384,12 @@ def main(argv):
     if(len(argv)>1):
         osc_bonjour.setClientCallback(client_callback)
         osc_bonjour.run_browser(False)
+        try:
+            while True:
+                time.sleep(5)
+        except KeyboardInterrupt:
+            osc_bonjour.shutdown()
+            sys.exit(0)
     else:
         osc_bonjour.run_register(False)
         try:
