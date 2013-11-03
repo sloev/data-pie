@@ -264,6 +264,7 @@ class Bonjour():
             for client in self.clients.itervalues():
                 if sdRef == client.query_sdRef:
                     client.ip = socket.inet_ntoa(rdata)
+                    self.debug(str(client.ip))
                     client.resolved = True
                     break;
 
