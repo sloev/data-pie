@@ -417,7 +417,7 @@ def main(argv, stdout):
             help="Registration type of the service advertised on Bonjour")
     parser.add_option("--log", action="store", dest="logging",
             help="Set logging level", default="INFO")
-    parser.add_option("-mode", action="store", dest="mode",
+    parser.add_option("--mode", action="store", type="string", dest="mode",
             help="mode r or b", default="r")
     (options, args) = parser.parse_args(argv)
 
