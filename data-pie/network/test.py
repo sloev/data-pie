@@ -338,6 +338,8 @@ class Bonjour():
         Callback for browsing hosts of type "regtype" on the network.
         """
         if errorCode != pybonjour.kDNSServiceErr_NoError:
+            self.debug(str(serviceName)+"\t"+regtype)
+
             return
 
         # Handle a removed client
