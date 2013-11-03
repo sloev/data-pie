@@ -67,7 +67,7 @@ class Bonjour():
     Bonjour service and browsing the network for services matching a certain 
     regtype.
     """
-    def __init__(self, name, port, regtype, debug=None, info=None, error=None):
+    def __init__(self, name, port, regtype):
         """
         Initialize a Bonjour object.  
 
@@ -81,16 +81,6 @@ class Bonjour():
                         _udp").  A list of service types is available at:
                         U{http://www.dns-sd.org/ServiceTypes.html}
         """
-        self.debug = logging.debug
-        self.info = logging.info
-        self.error = logging.error
-
-        if debug:
-            self.debug = debug
-        if error:
-            self.error = error
-        if info:
-            self.info = info
 
         assert type(name) is str
         self.name = name
@@ -196,7 +186,6 @@ class Bonjour():
         """
         Stop both the worker threads for registration and browsing
         """
-        self.debug("Received shutdown signal")
         self.stop_browser()
         self.stop_register()
 
@@ -214,11 +203,9 @@ class Bonjour():
                     if browse_sdRef in ready[0]:
                         pybonjour.DNSServiceProcessResult(browse_sdRef)
             except Exception:
-                self.error("Exception in Browser")
                 pass
         finally:
             browse_sdRef.close()
-            self.debug("Browser Service Stopped")
 
     def register(self):
         """
@@ -236,11 +223,9 @@ class Bonjour():
                     if reg_sdRef in ready[0]:
                         pybonjour.DNSServiceProcessResult(reg_sdRef)
             except Exception:
-                self.error("Exception in Registration")
                 pass
         finally:
             reg_sdRef.close()
-            self.debug("Registration Service Stopped")
 
 
     def register_callback(self, sdRef, flags, errorCode, name, regtype, domain):
@@ -248,8 +233,7 @@ class Bonjour():
         Callback used by the run_regsiter routine.
         """
         if errorCode == pybonjour.kDNSServiceErr_NoError:
-            self.info("Bonjour Service Registered at %s" %
-                      (self.fullname.decode('utf-8')))
+            pass
 
     def query_record_callback(self, sdRef, flags, interfaceIndex, errorCode,
                               fullname, rrtype, rrclass, rdata, ttl):
@@ -298,7 +282,6 @@ class Bonjour():
         if errorCode == pybonjour.kDNSServiceErr_NoError:
             if self.fullname == fullname:
                 localhost = True
-                self.debug("Resolved Self")
             else:
                 localhost = False
             for client in self.clients.itervalues():
@@ -320,7 +303,6 @@ class Bonjour():
                 while not self.queried:
                     ready = select.select([client.query_sdRef], [], [], self.timeout)
                     if client.query_sdRef not in ready[0]:
-                        self.debug("Query record timed out")
                         break
                     pybonjour.DNSServiceProcessResult(client.query_sdRef)
                 else:
@@ -329,8 +311,7 @@ class Bonjour():
                 client.query_sdRef.close()
             self.resolved.append(True)
         else:
-            self.error("Resolve failed with code: %s" % errorCode)
-
+            pass
     def browse_callback(self, sdRef, flags, interfaceIndex, errorCode,
                         serviceName, regtype, replyDomain):
         """
@@ -356,7 +337,6 @@ class Bonjour():
                 while not self.resolved:
                     ready = select.select([c.resolve_sdRef], [], [], self.timeout)
                     if c.resolve_sdRef not in ready[0]:
-                        self.debug("Remove resolve timed out")
                         break
                     pybonjour.DNSServiceProcessResult(c.resolve_sdRef)
                 else:
@@ -385,7 +365,6 @@ class Bonjour():
             while not self.resolved:
                 ready = select.select([c.resolve_sdRef], [], [], self.timeout)
                 if c.resolve_sdRef not in ready[0]:
-                    self.debug("Resolve timed out")
                     break
                 pybonjour.DNSServiceProcessResult(c.resolve_sdRef)
             else:
