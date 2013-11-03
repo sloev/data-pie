@@ -412,7 +412,7 @@ def main(argv, stdout):
             default=1234,
             help="Port of the service advertised on Bonjour")
     parser.add_option("-n", "--name", action="store", type="string", dest="name",
-            default="Test Bonjour Service",
+            default="TestBonjourService",
             help="Name of the service advertised on Bonjour")
     parser.add_option("-r", "--regtype", action="store", type="string", dest="regtype",
             default="_osc._udp",
@@ -438,7 +438,7 @@ def main(argv, stdout):
 
     osc_bonjour.setClientCallback(client_callback)
 
-    if(options.mode=="r"):
+    if(options.mode=="b"):
         osc_bonjour.run_browser(False)
     else:
         osc_bonjour.run_register(False)
