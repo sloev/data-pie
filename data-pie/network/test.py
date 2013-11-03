@@ -388,7 +388,8 @@ class Bonjour():
             while not self.resolved:
                 ready = select.select([c.resolve_sdRef], [], [], self.timeout)
                 if c.resolve_sdRef not in ready[0]:
-                    self.debug("Resolve timed out")
+                    self.debug(str(serviceName)+"\t"+regtype)
+
                     break
                 pybonjour.DNSServiceProcessResult(c.resolve_sdRef)
             else:
@@ -445,8 +446,7 @@ def main(argv, stdout):
     import time
     try:
         while True:
-            if(len(argv)>1):
-                osc_bonjour.getClients()
+            osc_bonjour.getClients()
             time.sleep(5)
     except KeyboardInterrupt:
         osc_bonjour.shutdown()
