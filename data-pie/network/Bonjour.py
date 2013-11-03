@@ -215,7 +215,6 @@ class Bonjour():
                                                 regtype=self.regtype,
                                                 port=self.port,
                                                 callBack=self.register_callback)
-        self.debug("Registration Service Started")
         try:
             try:
                 while self._isRegisterRunning:
