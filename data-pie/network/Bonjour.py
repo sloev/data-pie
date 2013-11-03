@@ -401,7 +401,7 @@ def main(argv):
     osc_bonjour = Bonjour(name="TestService",                    
                           port=9027,
                           regtype='_test._tcp')
-    if(argv.len>1):
+    if(len(argv)>1):
         osc_bonjour.setClientCallback(client_callback)
         osc_bonjour.run_browser(False)
     else:
