@@ -16,11 +16,13 @@ class Client():
         self.hostname = None
         self.ip = None
         self.port = None
+        self.fullName=None
         self.resolved = False
 
     def __str__(self):
         string = "\nServiceName: %s\n" % self.serviceName
         string += "Hostname:    %s\n" % self.hostname
+        string += "fullname:    %s\n" % self.fullname
         string += "IP:          %s\n" % self.ip
         string += "Port:        %s\n" % self.port
         return string
@@ -94,6 +96,7 @@ class Bonjour():
                 with self.browserLock:
                     self.currentClient.ip=socket.inet_ntoa(rdata)
                     self.currentClient.resolved=True
+                    self.currentClient.fullName=fullname
 #                 print '  IP         =', socket.inet_ntoa(rdata)
                 self.browserQueried.append(True)
         
@@ -143,9 +146,9 @@ class Bonjour():
                     if self.clients.has_key(serviceName):
                         print("client exists to be removed= "+str(serviceName))
                         self.clients.pop(serviceName)
-                print 'Service removed'
+                #print 'Service removed'
                 return
-            print 'Service added; resolving'
+            #print 'Service added; resolving'
             with self.browserLock:
                 self.currentClient=Client()
                 self.currentClient.serviceName=serviceName
@@ -165,6 +168,7 @@ class Bonjour():
                     pybonjour.DNSServiceProcessResult(resolve_sdRef)
                 else:
                     with self.browserLock:
+                        
                         if not self.clients.has_key(serviceName) and self.currentClient.resolved:
                             print("ading client="+str(serviceName))
                             self.clients[serviceName] = self.currentClient
