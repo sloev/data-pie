@@ -97,7 +97,6 @@ class Bonjour():
                     self.currentClient.ip=socket.inet_ntoa(rdata)
                     self.currentClient.resolved=True
                     self.currentClient.fullName=fullname
-#                 print '  IP         =', socket.inet_ntoa(rdata)
                 self.browserQueried.append(True)
         
         
@@ -109,12 +108,7 @@ class Bonjour():
                 self.currentClient.fullname=fullname
                 self.currentClient.port=port
                 self.currentClient.hostname=hosttarget.decode('utf-8')
-                
-#             print 'Resolved service:'
-#             print '  fullname   =', fullname
-#             print '  hosttarget =', hosttarget
-#             print '  port       =', port
-#         
+
             query_sdRef = \
                 pybonjour.DNSServiceQueryRecord(interfaceIndex = interfaceIndex,
                                                 fullname = hosttarget,
@@ -171,6 +165,7 @@ class Bonjour():
                         
                         if not self.clients.has_key(serviceName) and self.currentClient.resolved:
                             print("ading client="+str(serviceName))
+                            print(self.currentClient)
                             self.clients[serviceName] = self.currentClient
                     self.browserResolved.pop()
                     
