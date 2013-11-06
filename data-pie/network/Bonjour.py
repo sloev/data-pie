@@ -378,28 +378,25 @@ def client_callback(clients):
 def main(argv):
     import time
 
-    osc_bonjour = Bonjour(name="TestService",                    
+    a = Bonjour(name="TestService",                    
                           port=9027,
                           regtype='_test._tcp')
-    if(len(argv)>1):
-        osc_bonjour.setClientCallback(client_callback)
-        osc_bonjour.run_browser(False)
-        try:
-            while True:
-                time.sleep(5)
-        except KeyboardInterrupt:
-            osc_bonjour.shutdown()
-            sys.exit(0)
-    else:
-        osc_bonjour.run_register(False)
-        try:
-            while True:
-                time.sleep(5)
-                osc_bonjour.getClients()
-        except KeyboardInterrupt:
-            osc_bonjour.shutdown()
-            sys.exit(0)
-
+    b = Bonjour(name="TestService",                    
+                          port=9027,
+                          regtype='_test._tcp')
+    time.sleep(2)
+    print("starting register")
+    a.run_register(True)
+    print("starting browser")
+    b.run_browser(False)
+    time.sleep(7)
+    print("exiting register")
+    a.stop_register()
+    time.sleep(6)
+    print("exiting browser")
+    b.stop_browser()
+    print("exiting")
+    
 
 
 if __name__ == "__main__":

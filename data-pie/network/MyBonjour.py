@@ -9,6 +9,7 @@ import pybonjour
 import socket
 import time
 import threading
+
 class Bonjour():
     def __init__(self,name,regtype,port):
         self.name=name
@@ -23,6 +24,8 @@ class Bonjour():
 
         self.registerStopEvent = threading.Event()
         self.browserStopEvent = threading.Event()
+        
+        self.clients = dict()
         
         pass
     
