@@ -72,6 +72,7 @@ class Bonjour():
                                   rrtype, rrclass, rdata, ttl):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 print '  IP         =', socket.inet_ntoa(rdata)
+                print("fullname="+str(fullname))
                 self.browserQueried.append(True)
         
         
@@ -123,17 +124,15 @@ class Bonjour():
                                                         regtype,
                                                         replyDomain,
                                                         resolve_callback)
-        
             try:
-                with self.browserLock:   
-                    while not self.browserResolved:
-                        ready = select.select([resolve_sdRef], [], [], timeout)
-                        if resolve_sdRef not in ready[0]:
-                            print 'Resolve timed out'
-                            break
-                        pybonjour.DNSServiceProcessResult(resolve_sdRef)
-                    else:
-                        self.browserResolved.pop()
+                while not self.browserResolved:
+                    ready = select.select([resolve_sdRef], [], [], timeout)
+                    if resolve_sdRef not in ready[0]:
+                        print 'Resolve timed out'
+                        break
+                    pybonjour.DNSServiceProcessResult(resolve_sdRef)
+                else:
+                    self.browserResolved.pop()
             finally:
                 resolve_sdRef.close()
         
