@@ -14,6 +14,7 @@ class Bonjour():
         self.name=name
         self.regtype=regtype
         self.port=port
+        
         self.browserQueried  = []
         self.browserResolved = []
         
@@ -105,6 +106,7 @@ class Bonjour():
                 query_sdRef.close()
         
             self.browserResolved.append(True)
+            print(str(self.browserResolved))
         
         
         def browse_callback(sdRef, flags, interfaceIndex, errorCode, serviceName,
