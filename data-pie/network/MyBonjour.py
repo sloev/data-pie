@@ -203,16 +203,14 @@ def main():
     time.sleep(2)
     a.runRegister()
     index=0
-    while index < 20:
+    while index < 10:
         time.sleep(1)
-        b.printClients()
         index=index+1
         print("\n*_*\n")
     a.stopRegister()
     index=0
     while index < 7:
         time.sleep(1)
-        b.printClients()
         index=index+1
         print("\n*_*\n")
     print("stopping browser")
