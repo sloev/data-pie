@@ -175,7 +175,7 @@ def main():
     print("stopping browser")
     b.stopBrowser()
     print("exiting")
-    
+    a.stopRegister()
 if __name__ == '__main__':
     main()
 
