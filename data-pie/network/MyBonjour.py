@@ -37,6 +37,7 @@ class Bonjour():
     def runBrowser(self):
         self.browserStopEvent.clear()
         self.browserThread=threading.Thread(target=self.browser)
+        self.browserThread.start()
         
     def stopBrowser(self):
         self.browserStopEvent.set()
