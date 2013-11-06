@@ -182,8 +182,9 @@ class Bonjour():
         finally:
             browse_sdRef.close()
         print("exiting browser thread")
+        
     def printClients(self):
-        with self.clientLock:
+        with self.browserLock:
             for client in self.clients.itervalues():
                 print(client)
 
