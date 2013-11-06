@@ -19,7 +19,7 @@ class Client():
         self.resolved = False
 
     def __str__(self):
-        string = "ServiceName: %s\n" % self.serviceName
+        string = "\nServiceName: %s\n" % self.serviceName
         string += "Hostname:    %s\n" % self.hostname
         string += "IP:          %s\n" % self.ip
         string += "Port:        %s\n" % self.port
@@ -93,6 +93,7 @@ class Bonjour():
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 with self.browserLock:
                     self.currentClient.ip=socket.inet_ntoa(rdata)
+                    self.currentClient.resolved=True
 #                 print '  IP         =', socket.inet_ntoa(rdata)
                 self.browserQueried.append(True)
         
@@ -164,7 +165,7 @@ class Bonjour():
                     pybonjour.DNSServiceProcessResult(resolve_sdRef)
                 else:
                     with self.browserLock:
-                        if not self.clients.has_key(serviceName):
+                        if not self.clients.has_key(serviceName) and self.currentClient.resolved:
                             print("ading client="+str(serviceName))
                             self.clients[serviceName] = self.currentClient
                     self.browserResolved.pop()
