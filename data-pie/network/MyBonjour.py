@@ -163,9 +163,10 @@ def main():
     time.sleep(2)
     b.runBrowser()
     
-    time.sleep(10)
+    time.sleep(7)
     print("stopping register")
     a.stopRegister()
+    time.sleep(10)
     print("stopping browser")
     b.stopBrowser()
     print("exiting")
