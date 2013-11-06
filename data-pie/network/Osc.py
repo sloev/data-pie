@@ -42,7 +42,7 @@ class OscServer():
         self.oscServer.addMsgHandler("/print", self.printing_handler) 
         return self.oscServer.serve_forever
     
-    def initBonjourServer(self):
+    def register(self):
         def register_callback(sdRef, flags, errorCode, name, regType, domain):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
                 print 'Registered service:'
@@ -50,14 +50,31 @@ class OscServer():
                 print '  regtype =', regType
                 print '  domain  =', domain
     
-        self.sdRef = pybonjour.DNSServiceRegister(name = self.name,
+        sdRef = pybonjour.DNSServiceRegister(name = self.name,
                                                   regtype = self.regType,
                                                   port = self.port,
                                                   callBack = register_callback)    
-        ready = select.select([self.sdRef], [], [])
-        if self.sdRef in ready[0]:
-            print("first victim")
-            pybonjour.DNSServiceProcessResult(self.sdRef)
+        try:
+            try:
+                while self._isRegisterRunning:
+                    ready = select.select([sdRef], [], [], self.timeout)
+                    if sdRef in ready[0]:
+                        pybonjour.DNSServiceProcessResult(sdRef)
+            except Exception:
+                print("exception in register")
+                pass
+        finally:
+            sdRef.close()
+            
+    def run_register(self):
+        """
+        Run the Bonjour service registration
+        """
+        if not self._isRegisterRunning:
+            self._isRegisterRunning = True
+            self.register_t = threading.Thread(target=self.register)
+#            self.register_t.setDaemon(daemon)
+            self.register_t.start()
 
     def close(self):
         self.oscServer.close()
