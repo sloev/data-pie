@@ -176,7 +176,7 @@ class Bonjour():
         
         try:
             while not self.browserStopEvent.is_set():
-                ready = select.select([browse_sdRef], [], [])
+                ready = select.select([browse_sdRef], [], [],self.timeout)
                 if browse_sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(browse_sdRef)
         finally:
