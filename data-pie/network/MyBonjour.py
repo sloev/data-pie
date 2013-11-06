@@ -104,7 +104,7 @@ class Bonjour():
             with self.browserLock:
                 self.currentClient.fullname=fullname
                 self.currentClient.port=port
-                self.currentClient.hosttarget=hosttarget
+                self.currentClient.hostname=hosttarget.decode('utf-8')
                 
             print 'Resolved service:'
             print '  fullname   =', fullname
