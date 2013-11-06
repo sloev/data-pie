@@ -91,7 +91,7 @@ class Bonjour():
         def query_record_callback(sdRef, flags, interfaceIndex, errorCode, fullname,
                                   rrtype, rrclass, rdata, ttl):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
-                with self.clientLock:
+                with self.browserLock:
                     self.currentClient.ip=socket.inet_ntoa(rdata)
                 print '  IP         =', socket.inet_ntoa(rdata)
                 self.browserQueried.append(True)
@@ -101,7 +101,7 @@ class Bonjour():
                              hosttarget, port, txtRecord):
             if errorCode != pybonjour.kDNSServiceErr_NoError:
                 return
-            with self.clientLock:
+            with self.browserLock:
                 self.currentClient.fullname=fullname
                 self.currentClient.port=port
                 self.currentClient.hosttarget=hosttarget
@@ -138,13 +138,13 @@ class Bonjour():
                 return
         
             if not (flags & pybonjour.kDNSServiceFlagsAdd):
-                with self.clientLock:
+                with self.browserLock:
                     if self.clients.has_key(serviceName):
                         self.clients.pop(serviceName)
                 print 'Service removed'
                 return
             print 'Service added; resolving'
-            with self.clientLock:
+            with self.browserLock:
                 self.currentClient=Client()
                 self.currentClient.serviceName=serviceName
             resolve_sdRef = pybonjour.DNSServiceResolve(0,
@@ -162,7 +162,7 @@ class Bonjour():
                         break
                     pybonjour.DNSServiceProcessResult(resolve_sdRef)
                 else:
-                    with self.clientLock:
+                    with self.browserLock:
                         if not self.clients.has_key(serviceName):
                             self.clients[serviceName] = self.currentClient
                     self.browserResolved.pop()
