@@ -20,11 +20,11 @@ class Client():
         self.resolved = False
 
     def __str__(self):
-        string = "\nServiceName: %s\n" % self.serviceName
-        string += "Hostname:    %s\n" % self.hostname
-        string += "fullname:    %s\n" % self.fullname
-        string += "IP:          %s\n" % self.ip
-        string += "Port:        %s\n" % self.port
+        string = "\service name: \t%s\n" % self.serviceName
+        string += "host name:    \t%s\n" % self.hostname
+        string += "full name:    \t%s\n" % self.fullname
+        string += "ip:          \t%s\n" % self.ip
+        string += "port:        \t%s\n" % self.port
         return string
     
 class Bonjour():
@@ -44,8 +44,6 @@ class Bonjour():
         
         self.clients = dict()
         self.currentClient=Client()
-        
-        pass
     
     def runRegister(self):
         self.registerStopEvent.clear()
@@ -192,9 +190,9 @@ class Bonjour():
 
 
 def main():
-    name="TestService"
+    name="oscTestServer"
     port=9027
-    regtype='_test._tcp'
+    regtype='_osc._udp'
     
     a=Bonjour(name,regtype,port)
     b=Bonjour(name,regtype,port)
