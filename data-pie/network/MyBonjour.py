@@ -20,7 +20,7 @@ class Client():
         self.resolved = False
 
     def __str__(self):
-        string = "\service name: \t%s\n" % self.serviceName
+        string = "\nservice name: \t%s\n" % self.serviceName
         string += "host name:    \t%s\n" % self.hostname
         string += "full name:    \t%s\n" % self.fullname
         string += "ip:          \t%s\n" % self.ip
