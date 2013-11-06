@@ -200,21 +200,27 @@ def main():
     a=Bonjour(name,regtype,port)
     b=Bonjour(name,regtype,port)
     
-    a.runRegister()
-    time.sleep(2)
     b.runBrowser()
-    
-    time.sleep(7)
-    b.printClients()
-    print("stopping register")
-    a.stopRegister()
-    time.sleep(10)
+    time.sleep(2)
     a.runRegister()
-    time.sleep(5)
-    print("stopping browser")
-    b.stopBrowser()
-    print("exiting")
+    index=0
+    while index < 20:
+        time.sleep(1)
+        b.printClients()
+        index=index+1
+        print("\n*_*\n")
     a.stopRegister()
+    index=0
+    while index < 7:
+        time.sleep(1)
+        b.printClients()
+        index=index+1
+        print("\n*_*\n")
+    print("stopping browser")
+    a.stopRegister()
+    print("exiting")
+    b.stopBrowser()
+    
 if __name__ == '__main__':
     main()
 
