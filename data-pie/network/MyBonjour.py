@@ -26,7 +26,7 @@ class Bonjour():
         pass
     
     def runRegister(self):
-        self.regsterStopEvent.clear()
+        self.registerStopEvent.clear()
         self.registerThread=threading.Thread(target=self.register)
         self.registerThread.start()
         
