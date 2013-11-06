@@ -389,8 +389,9 @@ def main(argv):
     a.run_register(True)
     print("starting browser")
     b.run_browser(False)
-    time.sleep(10)
     b.setClientCallback(client_callback)
+
+    time.sleep(10)
     print("exiting register")
     a.stop_register()
     time.sleep(6)
