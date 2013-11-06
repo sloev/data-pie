@@ -388,8 +388,8 @@ def main(argv):
     print("starting register")
     a.run_register(True)
     print("starting browser")
-    b.run_browser(False)
     b.setClientCallback(client_callback)
+    b.run_browser(False)
 
     time.sleep(10)
     print("exiting register")
