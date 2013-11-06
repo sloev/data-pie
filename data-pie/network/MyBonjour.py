@@ -171,6 +171,8 @@ def main():
     print("stopping register")
     a.stopRegister()
     time.sleep(10)
+    a.runRegister()
+    time.sleep(5)
     print("stopping browser")
     b.stopBrowser()
     print("exiting")
