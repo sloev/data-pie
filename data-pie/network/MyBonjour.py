@@ -9,7 +9,6 @@ import pybonjour
 import socket
 import time
 import threading
-timeout  = 5
 class Bonjour():
     def __init__(self,name,regtype,port):
         self.name=name
@@ -19,7 +18,8 @@ class Bonjour():
         self.browserResolved = []
         
         self.browserLock=threading.Lock()
-        
+        self.timeout  = 5
+
         self.registerStopEvent = threading.Event()
         self.browserStopEvent = threading.Event()
         
@@ -59,7 +59,7 @@ class Bonjour():
         
         try:
             while not self.registerStopEvent.is_set():
-                ready = select.select([sdRef], [], [],timeout*2)
+                ready = select.select([sdRef], [], [],self.timeout*2)
                 if sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(sdRef)
 #                self.regStopEvent.wait(0.01)
@@ -94,7 +94,7 @@ class Bonjour():
         
             try:
                 while not self.browserQueried:
-                    ready = select.select([query_sdRef], [], [], timeout)
+                    ready = select.select([query_sdRef], [], [], self.timeout)
                     if query_sdRef not in ready[0]:
                         print 'Query record timed out'
                         break
@@ -126,7 +126,7 @@ class Bonjour():
                                                         resolve_callback)
             try:
                 while not self.browserResolved:
-                    ready = select.select([resolve_sdRef], [], [], timeout)
+                    ready = select.select([resolve_sdRef], [], [], self.timeout)
                     if resolve_sdRef not in ready[0]:
                         print 'Resolve timed out'
                         break
@@ -142,7 +142,7 @@ class Bonjour():
         
         try:
             while not self.browserStopEvent.is_set():
-                ready = select.select([browse_sdRef], [], [],timeout*2)
+                ready = select.select([browse_sdRef], [], [],self.timeout*2)
                 if browse_sdRef in ready[0]:
                     pybonjour.DNSServiceProcessResult(browse_sdRef)
         finally:
