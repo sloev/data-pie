@@ -10,6 +10,21 @@ import socket
 import time
 import threading
 
+class Client():
+    def __init__(self):
+        self.serviceName = None
+        self.hostname = None
+        self.ip = None
+        self.port = None
+        self.resolved = False
+
+    def __str__(self):
+        string = "ServiceName: %s\n" % self.serviceName
+        string += "Hostname:    %s\n" % self.hostname
+        string += "IP:          %s\n" % self.ip
+        string += "Port:        %s\n" % self.port
+        return string
+    
 class Bonjour():
     def __init__(self,name,regtype,port):
         self.name=name
@@ -26,6 +41,7 @@ class Bonjour():
         self.browserStopEvent = threading.Event()
         
         self.clients = dict()
+        self.currentClient=Client()
         
         pass
     
@@ -75,8 +91,9 @@ class Bonjour():
         def query_record_callback(sdRef, flags, interfaceIndex, errorCode, fullname,
                                   rrtype, rrclass, rdata, ttl):
             if errorCode == pybonjour.kDNSServiceErr_NoError:
+                with self.clientLock:
+                    self.currentClient.ip=socket.inet_ntoa(rdata)
                 print '  IP         =', socket.inet_ntoa(rdata)
-                print("fullname="+str(fullname))
                 self.browserQueried.append(True)
         
         
@@ -84,7 +101,11 @@ class Bonjour():
                              hosttarget, port, txtRecord):
             if errorCode != pybonjour.kDNSServiceErr_NoError:
                 return
-        
+            with self.clientLock:
+                self.currentClient.fullname=fullname
+                self.currentClient.port=port
+                self.currentClient.hosttarget=hosttarget
+                
             print 'Resolved service:'
             print '  fullname   =', fullname
             print '  hosttarget =', hosttarget
@@ -95,7 +116,7 @@ class Bonjour():
                                                 fullname = hosttarget,
                                                 rrtype = pybonjour.kDNSServiceType_A,
                                                 callBack = query_record_callback)
-        
+
             try:
                 while not self.browserQueried:
                     ready = select.select([query_sdRef], [], [], self.timeout)
@@ -117,17 +138,22 @@ class Bonjour():
                 return
         
             if not (flags & pybonjour.kDNSServiceFlagsAdd):
+                with self.clientLock:
+                    if self.clients.has_key(serviceName):
+                        self.clients.pop(serviceName)
                 print 'Service removed'
                 return
-        
             print 'Service added; resolving'
-        
+            with self.clientLock:
+                self.currentClient=Client()
+                self.currentClient.serviceName=serviceName
             resolve_sdRef = pybonjour.DNSServiceResolve(0,
                                                         interfaceIndex,
                                                         serviceName,
                                                         regtype,
                                                         replyDomain,
                                                         resolve_callback)
+       
             try:
                 while not self.browserResolved:
                     ready = select.select([resolve_sdRef], [], [], self.timeout)
@@ -136,7 +162,11 @@ class Bonjour():
                         break
                     pybonjour.DNSServiceProcessResult(resolve_sdRef)
                 else:
+                    with self.clientLock:
+                        if not self.clients.has_key(serviceName):
+                            self.clients[serviceName] = self.currentClient
                     self.browserResolved.pop()
+                    
             finally:
                 resolve_sdRef.close()
         
@@ -152,7 +182,11 @@ class Bonjour():
         finally:
             browse_sdRef.close()
         print("exiting browser thread")
-        
+    def printClients(self):
+        with self.clientLock:
+            for client in self.clients.itervalues():
+                print(client)
+
 
 def main():
     name="TestService"
@@ -167,6 +201,7 @@ def main():
     b.runBrowser()
     
     time.sleep(7)
+    b.printClients()
     print("stopping register")
     a.stopRegister()
     time.sleep(10)
