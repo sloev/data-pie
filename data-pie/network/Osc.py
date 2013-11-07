@@ -17,32 +17,55 @@ or run pydoc pyOSC.py. you can also get the docs by opening a python shell and d
 
 import OSC
 import time, threading,random
-from Bonjour import Bonjour
 class Osc:
     def __init__(self,name="OscTest",regType='_osc._udp',receiveAddress='127.0.0.1'):
         self.name=name
         self.regType=regType
         self.receiveAddress=receiveAddress
         
+        self.initOscClient()
         self.initOscServer()
     
     def getPort(self):
         return self.port
     
     def initOscServer(self):
+#         while True:
+#             try:
+#                 self.port = 9000 + random.randint(0,999)
+#                 print "%s: got port %s" % (self.name, self.port)
+#                 break
+#             except IOError:
+#                 print "%s: didn't get port %s" % (self.name, self.port)
+        self.oscServer = OSC.OSCServer((self.receiveAddress, self.oscClient, self.port))
+        self.oscServer.addDefaultHandlers()
+        self.oscServer.addMsgHandler("/patchBay", self.patchBayHandler) 
+        self.oscServer.addMsgHandler("/print", self.printingHandler) 
+        self.oscServer.addMsgHandler("/printed",self.printedReceived)
+        
+    def initOscClient(self):
+        self.oscClient = OSC.OSCClient()
         while True:
             try:
                 self.port = 9000 + random.randint(0,999)
-                self.oscServer = OSC.OSCServer((self.receiveAddress, self.port))
+                self.oscClient.connect( (self.receiveAddress, self.port) )
                 print "%s: got port %s" % (self.name, self.port)
                 break
             except IOError:
                 print "%s: didn't get port %s" % (self.name, self.port)
-        self.oscServer.addDefaultHandlers()
-        self.oscServer.addMsgHandler("/patchBay", self.patchBayHandler) 
-        self.oscServer.addMsgHandler("/print", self.printingHandler) 
+
+    def printedReceived(self,addr, tags, stuff, source):
+        
+        print "---"
+        print "received new osc msg from %s" % OSC.getUrlStr(source)
+        print "with addr : %s" % addr
+        print "typetags %s" % tags
+        print "data %s" % stuff
+        print "---"
+        
         
     def patchBayHandler(self,addr, tags, stuff, source):
+
         print "---"
         print "received new osc msg from %s" % OSC.getUrlStr(source)
         print "with addr : %s" % addr
@@ -57,14 +80,23 @@ class Osc:
         print "typetags %s" % tags
         print "data %s" % stuff
         print "---"
+        
+        # send a reply to the client.
+        string="%s is printed" % stuff
+        msg = Osc.OSCMessage("/printed")
+        msg.append(string)
+        return msg
     
-    def runOscServer(self):
+    def runOscServerClient(self):
         self.oscServerThread=threading.Thread(target=self.oscServer.serve_forever)
         self.oscServerThread.start()
+
     
-    def stopOscServer(self):
+    def stopOscServerClient(self):
         self.oscServer.close()
         self.oscServerThread.join()
+        self.oscClient.close()
+        
     
 def main():
 
@@ -73,10 +105,6 @@ def main():
     
     osc=Osc(name,regType)
     osc.runOscServer()
-    port=osc.getPort()
-    
-    a=Bonjour(name,regType,port)
-    a.runRegister()
     
     try :
         while 1 :
@@ -84,7 +112,7 @@ def main():
     except KeyboardInterrupt :
         print "\nClosing OSCServer."
         osc.stopOscServer()
-        a.stopRegister()
 
 if __name__ == '__main__':
     main()
+        
