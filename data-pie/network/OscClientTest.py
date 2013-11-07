@@ -23,10 +23,7 @@ def main():
         osc=Osc(c.serviceName,c.regType)
 
         while 1:
-            string="print LOL"
-            msg = OSC.OSCMessage("/print")
-            msg.append(string)
-            osc.send(msg)            
+            osc.sendTestMessage()            
             time.sleep(4)
     except KeyboardInterrupt:
         b.stopBrowser()
