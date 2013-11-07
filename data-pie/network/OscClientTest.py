@@ -20,7 +20,7 @@ def main():
             c=b.getFirstClient()            
             time.sleep(1)
         
-        osc=Osc(c.serviceName,c.regType)
+        osc=Osc(c.serviceName,c.regType,c.ip,c.port)
 
         while 1:
             osc.sendTestMessage()            

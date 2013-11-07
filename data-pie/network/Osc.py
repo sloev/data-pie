@@ -18,10 +18,11 @@ or run pydoc pyOSC.py. you can also get the docs by opening a python shell and d
 import OSC
 import time, threading,random
 class Osc:
-    def __init__(self,name="OscTest",regType='_osc._udp',receiveAddress='0.0.0.0'):
+    def __init__(self,name="OscTest",regType='_osc._udp',receiveAddress='0.0.0.0',port=None):
         self.name=name
         self.regType=regType
         self.receiveAddress=receiveAddress
+        self.port=port
         
         self.initOscClient()
         self.initOscServer()
