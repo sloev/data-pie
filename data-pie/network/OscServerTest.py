@@ -6,6 +6,7 @@ Created on Nov 7, 2013
 from Bonjour import Bonjour
 from Osc import Osc
 import time
+
 def main():
     
     name="oscTestServer"
@@ -15,9 +16,18 @@ def main():
     osc.runOscServerClient()
     port=osc.getPort()
     
+
+    
+    name="oscTestServer"
+    regType='_osc._udp'
+    
+    osc=Osc(name,regType)
+    osc.runOscServerClient()
+    
     a=Bonjour(name,regType,port)
     a.runRegister()
     
+
     try :
         while 1 :
             time.sleep(5)
