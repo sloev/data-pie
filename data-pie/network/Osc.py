@@ -73,6 +73,12 @@ class Osc:
         print "data %s" % stuff
         print "---"
         
+        # send a reply to the client.
+        string="%s is printed" % stuff
+        msg = OSC.OSCMessage("/printed")
+        msg.append(string)
+        return msg
+        
     def printingHandler(self,addr, tags, stuff, source):
         print "---"
         print "received new osc msg from %s" % OSC.getUrlStr(source)
@@ -81,11 +87,7 @@ class Osc:
         print "data %s" % stuff
         print "---"
         
-        # send a reply to the client.
-        string="%s is printed" % stuff
-        msg = OSC.OSCMessage("/printed")
-        msg.append(string)
-        return msg
+
     
     def runOscServerClient(self):
         self.oscServerThread=threading.Thread(target=self.oscServer.serve_forever)
