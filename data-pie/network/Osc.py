@@ -59,7 +59,7 @@ class Osc:
         print "---"
     
     def runOscServer(self):
-        self.oscServerThread=threading.Thread(target=self.oscServer.serveForever)
+        self.oscServerThread=threading.Thread(target=self.oscServer.serve_forever)
         self.oscServerThread.start()
     
     def stopOscServer(self):
