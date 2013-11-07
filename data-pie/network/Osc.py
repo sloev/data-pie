@@ -33,7 +33,7 @@ class Osc:
         while True:
             try:
                 self.port = 9000 + random.randint(0,999)
-                self.oscServer = OSC.OSCServer((self.address, self.port))
+                self.oscServer = OSC.OSCServer((self.receiveAddress, self.port))
                 print "%s: got port %s" % (self.name, self.port)
                 break
             except IOError:
