@@ -20,7 +20,7 @@ def main():
             c=b.getFirstClient()            
             time.sleep(1)
         
-        osc=Osc(c.name,c.regType)
+        osc=Osc(c.serviceName,c.regType)
 
         while 1:
             string="print LOL"
