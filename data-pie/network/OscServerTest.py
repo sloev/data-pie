@@ -12,7 +12,7 @@ def main():
     regType='_osc._udp'
     
     osc=Osc(name,regType)
-    osc.runOscServer()
+    osc.runOscServerClient()
     port=osc.getPort()
     
     a=Bonjour(name,regType,port)
@@ -23,7 +23,7 @@ def main():
             time.sleep(5)
     except KeyboardInterrupt :
         print "\nClosing OSCServer."
-        osc.stopOscServer()
+        osc.stopOscServerClient()
         a.stopRegister()
         
 if __name__ == '__main__':
