@@ -37,7 +37,7 @@ class Osc:
 #                 break
 #             except IOError:
 #                 print "%s: didn't get port %s" % (self.name, self.port)
-        self.oscServer = OSC.OSCServer((self.receiveAddress, self.oscClient, self.port))
+        self.oscServer = OSC.OSCServer((self.receiveAddress, self.port),self.oscClient, self.port)
         self.oscServer.addDefaultHandlers()
         self.oscServer.addMsgHandler("/patchBay", self.patchBayHandler) 
         self.oscServer.addMsgHandler("/print", self.printingHandler) 
