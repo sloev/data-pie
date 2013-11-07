@@ -8,22 +8,14 @@ from Osc import Osc
 import time
 
 def main():
-    
+
     name="oscTestServer"
     regType='_osc._udp'
     
     osc=Osc(name,regType)
     osc.runOscServerClient()
     port=osc.getPort()
-    
 
-    
-    name="oscTestServer"
-    regType='_osc._udp'
-    
-    osc=Osc(name,regType)
-    osc.runOscServerClient()
-    
     a=Bonjour(name,regType,port)
     a.runRegister()
     
