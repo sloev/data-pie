@@ -167,7 +167,7 @@ class Bonjour():
                             #print("ading client="+str(serviceName))
                             self.currentClient.regType=regtype
                             #print(self.currentClient)
-                            self.clients[serviceName.decode('utf-8')] = self.currentClient
+                            self.clients[serviceName] = self.currentClient
                     self.browserResolved.pop()
                     
             finally:
