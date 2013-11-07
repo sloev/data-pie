@@ -104,7 +104,7 @@ def main():
     regType='_osc._udp'
     
     osc=Osc(name,regType)
-    osc.runOscServer()
+    osc.runOscServerClient()
     
     try :
         while 1 :
