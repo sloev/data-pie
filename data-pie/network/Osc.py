@@ -95,16 +95,15 @@ class Osc:
 
     
     def stopOscServerClient(self):
+        self.oscClient.close()
         self.oscServer.close()
         self.oscServerThread.join()
-        self.oscClient.close()
     
     def sendTestMessage(self):
         string="print LOL"
         msg = OSC.OSCMessage("/print")
         msg.append(string)
         self.oscClient.send(msg)
-        
     
 def main():
 
