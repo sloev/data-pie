@@ -63,7 +63,7 @@ class Osc:
         self.oscServerThread.start()
     
     def stopOscServer(self):
-        self.oscServerThread.close()
+        self.oscServer.close()
         self.oscServerThread.join()
     
 def main():
