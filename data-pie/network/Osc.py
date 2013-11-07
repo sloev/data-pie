@@ -115,7 +115,7 @@ def main():
     try :
         while 1 :
             time.sleep(5)
-            
+            osc.sendTestMessage()
     except KeyboardInterrupt :
         print "\nClosing OSCServer."
         osc.stopOscServerClient()
