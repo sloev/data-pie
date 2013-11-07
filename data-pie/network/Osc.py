@@ -96,8 +96,11 @@ class Osc:
     
     def stopOscServerClient(self):
         self.oscClient.close()
-        self.oscServer.close()
-        self.oscServerThread.join()
+        try:
+            self.oscServer.close()
+            self.oscServerThread.join()
+        finally:
+            pass
     
     def sendTestMessage(self):
         string="print LOL"

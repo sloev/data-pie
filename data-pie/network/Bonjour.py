@@ -17,6 +17,7 @@ class Client():
         self.ip = None
         self.port = None
         self.fullName=None
+        self.regType=None
         self.resolved = False
 
     def __str__(self):
@@ -25,10 +26,11 @@ class Client():
         string += "full name:    \t%s\n" % self.fullname
         string += "ip:          \t%s\n" % self.ip
         string += "port:        \t%s\n" % self.port
+        string += "regtype:        \t%s\n" % self.regType
         return string
     
 class Bonjour():
-    def __init__(self,name,regtype,port):
+    def __init__(self,name,regtype,port=None):
         self.name=name
         self.regtype=regtype
         self.port=port
@@ -164,6 +166,7 @@ class Bonjour():
                         if not self.clients.has_key(serviceName) and self.currentClient.resolved:
                             print("ading client="+str(serviceName))
                             print(self.currentClient)
+                            self.currentClient.regType=regtype
                             self.clients[serviceName] = self.currentClient
                     self.browserResolved.pop()
                     
@@ -187,7 +190,11 @@ class Bonjour():
         with self.browserLock:
             for client in self.clients.itervalues():
                 print(client)
-
+                
+    def getFirstClient(self):
+        if len(self.clients)>0:
+            return self.clients.get(self.clients.keys()[0])
+        return None
 
 def main():
     name="oscTestServer"

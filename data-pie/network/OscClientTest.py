@@ -5,33 +5,32 @@ Created on Nov 7, 2013
 '''
 from Bonjour import Bonjour
 from Osc import Osc
+import time
+import OSC
 
 def main():
     name="oscTestServer"
-    port=9027
     regtype='_osc._udp'
-    
-    a=Bonjour(name,regtype,port)
-    b=Bonjour(name,regtype,port)
+    b=Bonjour(name,regtype)
     
     b.runBrowser()
-    time.sleep(2)
-    a.runRegister()
-    index=0
-    while index < 10:
-        time.sleep(1)
-        index=index+1
-        print("\n*_*\n")
-    a.stopRegister()
-    index=0
-    while index < 7:
-        time.sleep(1)
-        index=index+1
-        print("\n*_*\n")
-    print("stopping browser")
-    a.stopRegister()
-    print("exiting")
-    b.stopBrowser()
+    try:
+        c=None
+        while(c==None):
+            c=b.getFirstClient()            
+            time.sleep(1)
+        
+        osc=Osc(c.name,c.regType)
+
+        while 1:
+            string="print LOL"
+            msg = OSC.OSCMessage("/print")
+            msg.append(string)
+            osc.send(msg)            
+            time.sleep(4)
+    except KeyboardInterrupt:
+        b.stopBrowser()
+        osc.stopOscServerClient()
     
 if __name__ == '__main__':
     main()
