@@ -45,14 +45,16 @@ class Osc:
         
     def initOscClient(self):
         self.oscClient = OSC.OSCClient()
-        while True:
-            try:
-                self.port = 9000 + random.randint(0,999)
-                self.oscClient.connect( (self.receiveAddress, self.port) )
-                print "%s: got port %s" % (self.name, self.port)
-                break
-            except IOError:
-                print "%s: didn't get port %s" % (self.name, self.port)
+        if(self.port==None):
+            while True:
+                try:
+                    self.port = 9000 + random.randint(0,999)
+                    self.oscClient.connect( (self.receiveAddress, self.port) )
+                    print "%s: got port %s" % (self.name, self.port)
+                    break
+                except IOError:
+                    print "%s: didn't get port %s" % (self.name, self.port)
+        self.oscClient.connect( (self.receiveAddress, self.port) )
 
     def printedReceived(self,addr, tags, stuff, source):
         
