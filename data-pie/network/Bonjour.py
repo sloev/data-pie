@@ -164,7 +164,7 @@ class Bonjour():
                     with self.browserLock:
                         
                         if not self.clients.has_key(serviceName) and self.currentClient.resolved:
-                            print("ading client="+str(serviceName))
+                            #print("ading client="+str(serviceName))
                             self.currentClient.regType=regtype
                             print(self.currentClient)
                             self.clients[serviceName] = self.currentClient
