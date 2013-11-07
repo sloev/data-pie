@@ -83,7 +83,7 @@ class Osc:
         
         # send a reply to the client.
         string="%s is printed" % stuff
-        msg = Osc.OSCMessage("/printed")
+        msg = OSC.OSCMessage("/printed")
         msg.append(string)
         return msg
     
@@ -96,6 +96,12 @@ class Osc:
         self.oscServer.close()
         self.oscServerThread.join()
         self.oscClient.close()
+    
+    def sendTestMessage(self):
+        string="print LOL"
+        msg = OSC.OSCMessage("/print")
+        msg.append(string)
+        self.oscClient.send(msg)
         
     
 def main():
@@ -109,9 +115,10 @@ def main():
     try :
         while 1 :
             time.sleep(5)
+            
     except KeyboardInterrupt :
         print "\nClosing OSCServer."
-        osc.stopOscServer()
+        osc.stopOscServerClient()
 
 if __name__ == '__main__':
     main()
